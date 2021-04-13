@@ -25,6 +25,8 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('profile', [AuthController::class, 'profile']);
     Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::get('verification', [AuthController::class, 'verify']);
+    Route::post('change-pass', [AuthController::class, 'changePassword']);
 });
 
 Route::group([

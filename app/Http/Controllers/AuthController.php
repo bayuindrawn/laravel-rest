@@ -13,7 +13,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'verify']]);
     }
 
     public function login(Request $request)
@@ -24,14 +24,16 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()){
-            return response()->json($validator->errors(), Response::HTTP_FAILED_DEPENDENCY);
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $token_validity = 60*24;
 
         $this->guard()->factory()->setTTL($token_validity);
 
-        if(!$token = $this->guard()->attempt($validator->validated())){
+        $credentials = array_merge($validator->validated(), ['is_verified' => 1]);
+
+        if(!$token = $this->guard()->attempt($credentials)){
             return response()->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
@@ -99,6 +101,40 @@ class AuthController extends Controller
             'token_validity' => $this->guard()->factory()->getTTL() * 60,
             'profile' => $this->guard()->user() 
         ]);
+    }
+
+    public function verify(Request $request)
+    {
+        $verification_code = $request->get('code');
+
+        $user = User::verifyUser($verification_code);
+
+        if(!empty($user)){
+            $response = [
+                'message' => 'User verification has been successful.',
+                'data' => $user
+            ];
+
+            return response()->json($response, Response::HTTP_OK);
+        } else {
+            return response()->json(['message'=>'failed verify user'], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required',
+            'new_password' => 'required|confirmed|min:6'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $changePass = User::changePass($validator->validated(), $this->guard()->user()->id);
+
+        return $changePass;
     }
     
     protected function guard()

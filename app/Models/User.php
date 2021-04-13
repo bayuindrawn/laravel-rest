@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\Response;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -22,6 +25,7 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'phone',
+        'email_verified_at',
         'verification_code',
         'is_verified'
     ];
@@ -63,5 +67,33 @@ class User extends Authenticatable implements JWTSubject
     public static function createUser($payload)
     {
         return self::create($payload);
+    }
+
+    public static function verifyUser($verificationCode)
+    {
+        $user = self::where('verification_code', $verificationCode)->first();
+        
+        if(!empty($user)) {
+            $user->email_verified_at = Carbon::now();
+            $user->is_verified = 1;
+            $user->save();
+        }
+
+        return $user;
+    }
+
+    public static function changePass($payload, $id)
+    {
+        $user = self::findOrFail($id);
+        
+        if(Hash::check($payload['old_password'], $user->password)){
+            $user->fill([
+                'password' => bcrypt($payload['new_password'])
+            ])->save();
+
+            return response()->json(['message' => 'Password changed successfully'] , Response::HTTP_OK);
+        } else {
+            return response()->json(['message' => 'Password changed failed'], Response::HTTP_FAILED_DEPENDENCY);
+        }
     }
 }
