@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompaniesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +20,7 @@ Route::group([
     'middleware' => 'api',
     'namespace' => 'App\Http\Controllers',
     'prefix' => 'auth'
-], function ($router) {
+], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
     Route::post('logout', [AuthController::class, 'logout']);
@@ -31,8 +32,11 @@ Route::group([
 
 Route::group([
     'middleware' => 'api',
-    'namespace' => 'App\Http\Controllers'
-], function ($router) {
-    Route::get('/users', [UserController::class, 'index']);
-    Route::post('/users/create', [UserController::class, 'store']);
+    'namespace' => 'App\Http\Controllers',
+    'prefix' => 'cmp'
+], function () {
+    Route::post('get', [CompaniesController::class, 'index']);
+    Route::get('get-fav', [CompaniesController::class, 'getFav']);
+    Route::post('store', [CompaniesController::class, 'store']);
+    Route::post('destroy', [CompaniesController::class, 'destroy']);
 });

@@ -24,7 +24,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()){
-            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return response()->json(['error' => $validator->errors()->toArray()], Response::HTTP_OK);
         }
 
         $token_validity = 60*24;
@@ -34,7 +34,7 @@ class AuthController extends Controller
         $credentials = array_merge($validator->validated(), ['is_verified' => 1]);
 
         if(!$token = $this->guard()->attempt($credentials)){
-            return response()->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['invalidCredentials' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->responseWithToken($token);
@@ -51,7 +51,7 @@ class AuthController extends Controller
         ]);
 
         if($validator->fails()) {
-            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return response()->json(['error' => $validator->errors(), Response::HTTP_OK]);
         }
 
         try {
@@ -115,7 +115,8 @@ class AuthController extends Controller
                 'data' => $user
             ];
 
-            return response()->json($response, Response::HTTP_OK);
+            // return response()->json($response, Response::HTTP_OK);
+            return view('verification.success');
         } else {
             return response()->json(['message'=>'failed verify user'], Response::HTTP_NOT_ACCEPTABLE);
         }

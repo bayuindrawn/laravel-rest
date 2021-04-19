@@ -101,8 +101,7 @@
                                             <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                                                 <tr>
                                                     <td>
-                                                        <h1 style="font-family: Montserrat, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;line-height: 1.15em;font-weight: 700;color: #1691ff !important;"font-size: 20px;>My App
-                                                        </h1>
+                                                        <h1 style="font-family: Montserrat, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;line-height: 1.15em;font-weight: 700;color: #1691ff !important;"font-size: 20px;>LeadBook</h1>
                                                     </td>
                                                     <td>
                                                         <h3 style="text-align: right; color: red;">Verification email
@@ -112,7 +111,7 @@
                                             </table>
                                             <hr>
                                             <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px; margin-top: 20px;">Hi {{$email_data['name']}},</p>
-                                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Welcome to my app</p><br>
+                                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Welcome to LeadBook</p><br>
                                             <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
                                             Please click the below link to verify your email and activate your account!</p><br>
 
@@ -124,7 +123,7 @@
                                                                 <tbody>
                                                                     <tr>
                                                                         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #3498db; border-radius: 5px; text-align: center;"> 
-                                                                            <a style="display: inline-block; color: #ffffff; background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #3498db;" href="http://127.0.0.1:8000/api/verification?code=`{{ $email_data['verification_code'] }}`"> Click Here! </a> 
+                                                                            <a style="display: inline-block; color: #ffffff; background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #3498db;" href="`{{ env('APP_URL'), 'http://127.0.0.1:8000/api/' }}`auth/verification?code=`{{ $email_data['verification_code'] }}`"> Click Here! </a> 
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -148,7 +147,7 @@
                         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                             <tr>
                                 <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">This email is a service provided by my app.</span>
+                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">This email is a service provided by LeadBook.</span>
                                 </td>
                             </tr>
                             <tr>

@@ -49,6 +49,14 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+     /**
+     * Get all of the companys for the project.
+     */
+    public function favourite_companies()
+    {
+        return $this->hasMany(FavouriteCompanies::class, 'user_id', 'id');
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -95,5 +103,17 @@ class User extends Authenticatable implements JWTSubject
         } else {
             return response()->json(['message' => 'Password changed failed'], Response::HTTP_FAILED_DEPENDENCY);
         }
+    }
+
+    public static function getUserFavoriteCompany($userId)
+    {
+        $data = User::with(['favourite_companies:id,user_id,companies_id', 'favourite_companies.companies:id,name,address,phone'])
+        ->where('id', $userId)
+        ->first();
+
+        return response()->json([
+            'message' => 'Get data user favorite companies successfully',
+            'data' => $data
+        ] , Response::HTTP_OK);
     }
 }
